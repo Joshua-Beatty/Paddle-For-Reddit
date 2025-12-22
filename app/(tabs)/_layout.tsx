@@ -3,7 +3,7 @@ import { router, Tabs } from "expo-router";
 import type React from "react";
 import { useEffect } from "react";
 
-import { useLoggedIn } from "@/utils/hooks/useLoggedIn";
+import { useLoggedIn } from "@/utils/hooks/sessionHooks";
 import { useTheme } from "@/utils/hooks/useTheme";
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
@@ -41,7 +41,7 @@ export default function TabLayout() {
                 }}
             />
             <Tabs.Screen
-                name="two"
+                name="profile"
                 options={{
                     title: "Profile",
                     tabBarIcon: ({ color }) => (
@@ -50,7 +50,7 @@ export default function TabLayout() {
                 }}
             />
             <Tabs.Screen
-                name="three"
+                name="search"
                 options={{
                     title: "Search",
                     tabBarIcon: ({ color }) => (
@@ -59,7 +59,7 @@ export default function TabLayout() {
                 }}
             />
             <Tabs.Screen
-                name="four"
+                name="settings"
                 options={{
                     title: "Settings",
                     tabBarIcon: ({ color }) => (

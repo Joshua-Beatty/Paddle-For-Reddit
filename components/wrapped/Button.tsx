@@ -47,7 +47,6 @@ export default function Button({
             onPress={onPress}
             disabled={disabled}
             style={({ pressed }) => [
-                { marginVertical: 15 },
                 styles.base,
                 pressed && styles.pressed,
                 disabled && styles.disabled,

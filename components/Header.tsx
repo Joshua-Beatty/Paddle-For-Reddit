@@ -10,7 +10,6 @@ export default function Header({ title }: { title: string }) {
                 fontWeight: "600",
                 backgroundColor: theme.card,
                 paddingBottom: 5,
-                marginBottom: 3,
                 paddingLeft: 5,
             }}
         >

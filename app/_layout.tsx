@@ -8,6 +8,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import { useTheme } from "@/utils/hooks/useTheme";
 import "react-native-reanimated";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export {
@@ -52,6 +53,8 @@ import { DefaultTheme } from "@react-navigation/native";
 import { StatusBar } from "react-native";
 import type { Theme } from "@/constants/Themes";
 
+const queryClient = new QueryClient();
+
 function RootLayoutNav({ theme }: { theme: Theme }) {
     const MyTheme: typeof DefaultTheme = {
         ...DefaultTheme,
@@ -69,15 +72,17 @@ function RootLayoutNav({ theme }: { theme: Theme }) {
 
     return (
         <ThemeProvider value={MyTheme}>
-            <StatusBar
-                barStyle={theme.dark ? "light-content" : "dark-content"}
-            />
-            <SafeAreaView
-                style={{ flex: 1, backgroundColor: theme.safeAreaColor }}
-                edges={["top"]}
-            >
-                <Stack screenOptions={{ headerShown: false }}></Stack>
-            </SafeAreaView>
+            <QueryClientProvider client={queryClient}>
+                <StatusBar
+                    barStyle={theme.dark ? "light-content" : "dark-content"}
+                />
+                <SafeAreaView
+                    style={{ flex: 1, backgroundColor: theme.safeAreaColor }}
+                    edges={["top"]}
+                >
+                    <Stack screenOptions={{ headerShown: false }}></Stack>
+                </SafeAreaView>
+            </QueryClientProvider>
         </ThemeProvider>
     );
 }
