@@ -4,4 +4,3 @@ import Text from "./wrapped/Text";
 import TextInput from "./wrapped/TextInput";
 
 export { Button, Link, Text, TextInput };
-

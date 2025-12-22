@@ -1,11 +1,10 @@
-import { Text } from '@/components/library';
-import { View } from 'react-native';
-
+import { View } from "react-native";
+import { Text } from "@/components/library";
 
 export default function TabOneScreen() {
-  return (
-    <View>
-      <Text>Tab One</Text>
-    </View>
-  );
+    return (
+        <View>
+            <Text>Tab One</Text>
+        </View>
+    );
 }
