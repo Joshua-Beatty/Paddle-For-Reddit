@@ -1,16 +1,18 @@
+// import { Theme } from '@/constants/Colors';
+import { useTheme } from '@/utils/hooks/useTheme';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import { ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { useColorScheme } from '@/components/useColorScheme';
 
 export {
   // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
+  ErrorBoundary
 } from 'expo-router';
 
 export const unstable_settings = {
@@ -27,7 +29,6 @@ export default function RootLayout() {
     ...FontAwesome.font,
   });
 
-  // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
     if (error) throw error;
   }, [error]);
@@ -38,22 +39,48 @@ export default function RootLayout() {
     }
   }, [loaded]);
 
+  const theme = useTheme();
+
+
   if (!loaded) {
     return null;
   }
 
-  return <RootLayoutNav />;
+  return <RootLayoutNav theme={theme}/>;
 }
 
-function RootLayoutNav() {
-  const colorScheme = useColorScheme();
+import { Theme } from '@/constants/Themes';
+import {
+  DefaultTheme
+} from '@react-navigation/native';
+import { StatusBar } from 'react-native';
 
+
+function RootLayoutNav({theme}: {theme: Theme}) {
+  const MyTheme: typeof DefaultTheme = {
+    ...DefaultTheme,
+    dark: theme.dark,
+    colors: {
+      ...DefaultTheme.colors,
+      primary: theme.primary,
+      background: theme.background,
+      card: theme.card,
+      text: theme.text,
+      border: theme.border,
+      notification: theme.notification,
+    },
+  };
+  
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-      </Stack>
-    </ThemeProvider>
+    <ThemeProvider  value={MyTheme}>
+        <StatusBar
+          barStyle={theme.dark ? "light-content" : "dark-content"}
+        />
+      <SafeAreaView style={{ flex: 1, backgroundColor: theme.safeAreaColor }} edges={["top"]}>
+        <Stack screenOptions={{headerShown: false}}>
+          
+        </Stack>
+      </SafeAreaView>
+    </ThemeProvider >
   );
 }

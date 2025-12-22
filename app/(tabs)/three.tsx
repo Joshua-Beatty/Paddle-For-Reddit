@@ -3,7 +3,6 @@ import { useThemeName } from '@/utils/hooks/useTheme';
 import { storage } from '@/utils/storage';
 import { Button, View } from 'react-native';
 
-
 export default function TabTwoScreen() {
   const themeName = useThemeName()
 
