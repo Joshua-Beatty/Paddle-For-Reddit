@@ -2,7 +2,6 @@ import FontAwesome from "@expo/vector-icons/FontAwesome6";
 import { router, Tabs } from "expo-router";
 import type React from "react";
 import { useEffect } from "react";
-
 import { useLoggedIn } from "@/utils/hooks/sessionHooks";
 import { useTheme } from "@/utils/hooks/useTheme";
 

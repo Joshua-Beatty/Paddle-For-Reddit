@@ -5,7 +5,6 @@ import { storage, useStorageString } from "@/utils/storage";
 
 export function useLoggedIn() {
     const [loggedIn, _setLoggedIn] = useStorageString(TOKEN_KEY);
-    console.log(loggedIn);
     return !!loggedIn;
 }
 const TokenSchema = z.object({
@@ -67,7 +66,6 @@ export function useSignIn() {
         async (redirectLink: string) => {
             const url = new URL(redirectLink);
             const code = url.searchParams.get("code");
-            console.log(redirectLink, clientSecret, code);
             const response = await fetch(
                 `https://www.reddit.com/api/v1/access_token?grant_type=authorization_code&code=${code}&redirect_uri=http://example.com`,
                 {
@@ -78,7 +76,6 @@ export function useSignIn() {
                 },
             );
             const body = await response.json();
-            console.log(body);
             try {
                 setToken(body as any);
                 return { success: true };

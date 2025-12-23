@@ -21,7 +21,6 @@ async function request(
     method: string,
     headers?: Record<string, string>,
 ) {
-    const clientSecret = storage.getString(CLIENT_SECRET);
     const url = new URL(endpoint, "https://oauth.reddit.com/api/v1/");
     let token = getToken();
     if (token.expires_at > +new Date()) {
