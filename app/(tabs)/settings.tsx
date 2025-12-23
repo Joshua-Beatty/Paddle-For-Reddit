@@ -1,6 +1,6 @@
 import { View } from "react-native";
 import Header from "@/components/Header";
-import { Button, Text } from "@/components/library";
+import { Button } from "@/components/library";
 import { useThemeName } from "@/constants/storageKeys";
 
 export default function Settings() {

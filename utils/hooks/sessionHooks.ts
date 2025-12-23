@@ -10,7 +10,7 @@ export function useLoggedIn() {
 const TokenSchema = z.object({
     access_token: z.string(),
     expires_in: z.number(),
-    expires_at: z.number(),
+    expires_at: z.optional(z.number()),
     refresh_token: z.string(),
     scope: z.string(),
     token_type: z.literal("bearer"),
@@ -23,7 +23,7 @@ export function getToken() {
 }
 export function setToken(newToken: Token) {
     if (newToken.expires_in && !newToken.expires_at)
-        newToken.expires_at = +new Date() + newToken.expires_in * 1000 * 0.9;
+        newToken.expires_at = Date.now() + newToken.expires_in * 1000 * 0.9;
     try {
         storage.set(TOKEN_KEY, JSON.stringify(TokenSchema.parse(newToken)));
     } catch (e) {
@@ -33,14 +33,14 @@ export function setToken(newToken: Token) {
 }
 
 export function useToken() {
-    const [tokenString, setTokenString] = useStorageString(TOKEN_KEY);
+    const [tokenString, _setTokenString] = useStorageString(TOKEN_KEY);
 
     let parsedToken: Token | null = null;
 
     if (tokenString) {
         try {
             const json = JSON.parse(tokenString);
-            if (!json.expires_at) json.expires_at == 0;
+            if (!json.expires_at) json.expires_at === 0;
             const result = TokenSchema.safeParse(json);
 
             if (result.success) {
@@ -71,13 +71,13 @@ export function useSignIn() {
                 {
                     method: "POST",
                     headers: {
-                        Authorization: "Basic " + btoa(`${clientSecret}:`),
+                        Authorization: `Basic ${btoa(`${clientSecret}:`)}`,
                     },
                 },
             );
             const body = await response.json();
             try {
-                setToken(body as any);
+                setToken(body as Token);
                 return { success: true };
             } catch (e) {
                 return { success: false, error: `${e}` };

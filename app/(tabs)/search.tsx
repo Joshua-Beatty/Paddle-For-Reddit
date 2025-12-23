@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { View } from "react-native";
 import Header from "@/components/Header";
-import { Button, Text, TextInput } from "@/components/library";
-import SearchResult from "@/components/SearchResult";
+import { TextInput } from "@/components/library";
+import SearchResult from "@/components/Search/SearchResult";
 
 export default function Search() {
     const [term, setTerm] = useState("");

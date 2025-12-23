@@ -2,33 +2,66 @@ import { CLIENT_SECRET } from "@/constants/storageKeys";
 import { getToken, setToken, type Token } from "./hooks/sessionHooks";
 import { storage } from "./storage";
 
+export type JSONPrimitive = string | number | boolean | null;
+
+export type JSONValue =
+    | JSONPrimitive
+    | { [key: string]: JSONValue }
+    | JSONValue[];
+
 const client = {
     get: (endpoint: string, headers?: Record<string, string>) =>
         request(endpoint, null, "GET", headers),
-    post: (endpoint: string, body: any, headers?: Record<string, string>) =>
-        request(endpoint, body, "POST", headers),
-    patch: (endpoint: string, body: any, headers?: Record<string, string>) =>
-        request(endpoint, body, "PATCH", headers),
-    put: (endpoint: string, body: any, headers?: Record<string, string>) =>
-        request(endpoint, body, "PUT", headers),
+    post: (
+        endpoint: string,
+        body: JSONValue,
+        headers?: Record<string, string>,
+    ) => request(endpoint, body, "POST", headers),
+    patch: (
+        endpoint: string,
+        body: JSONValue,
+        headers?: Record<string, string>,
+    ) => request(endpoint, body, "PATCH", headers),
+    put: (
+        endpoint: string,
+        body: JSONValue,
+        headers?: Record<string, string>,
+    ) => request(endpoint, body, "PUT", headers),
 };
 
 export default client;
 
 async function request(
     endpoint: string,
-    body: any,
+    body: JSONValue,
     method: string,
     headers?: Record<string, string>,
 ) {
     const url = new URL(endpoint, "https://oauth.reddit.com/api/v1/");
     let token = getToken();
-    if (token.expires_at > +new Date()) {
+    if (!token.expires_at || token.expires_at > Date.now()) {
         token = await refreshTokenWrapper(token);
     }
-    const response = await fetch(url, {
+    let bodyInit: BodyInit | null = null;
+    switch (typeof body) {
+        case "string":
+            bodyInit = body;
+            break;
+        case "number":
+        case "bigint":
+        case "boolean":
+            bodyInit = body.toString();
+            break;
+        case "object":
+            bodyInit = JSON.stringify(body);
+            break;
+        default:
+            throw `Unsuported body type: ${typeof body}`;
+    }
+
+    const response = await fetch(url.toString(), {
         method: method,
-        body: body,
+        body: bodyInit,
         headers: {
             Authorization: `bearer ${token.access_token}`,
             ...headers,
@@ -83,7 +116,7 @@ async function refreshToken(token: Token): Promise<Token> {
         {
             method: "POST",
             headers: {
-                Authorization: "Basic " + btoa(`${clientSecret}:`),
+                Authorization: `Basic ${btoa(`${clientSecret}:`)}`,
             },
         },
     );
