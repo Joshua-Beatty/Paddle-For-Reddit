@@ -53,7 +53,9 @@ async function request(
             bodyInit = body.toString();
             break;
         case "object":
-            bodyInit = JSON.stringify(body);
+            if (body != null) {
+                bodyInit = JSON.stringify(body);
+            }
             break;
         default:
             throw `Unsuported body type: ${typeof body}`;
